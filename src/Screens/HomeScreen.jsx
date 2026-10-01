@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // ⚠️ File ke asli naam ke hisab se path rakho (Button / Botton, Dropdown / Dropdwon)
@@ -70,6 +70,13 @@ const CITIES = [
     { label: 'Chatrapur', value: 6 },
 ];
 
+const REPO_URL = 'https://github.com/BIKRAMNAHAK/my_mobile_app';
+const ZIP_URL = 'https://github.com/BIKRAMNAHAK/my_mobile_app/archive/refs/heads/main.zip';
+
+const SHARE_MESSAGE =
+    `Check out this React Native starter app source code:\n${REPO_URL}\n\n` +
+    'Please open and unzip it on your computer. Do not try to open it on mobile.';
+
 const DemoCard = ({ title, children }) => (
     <View style={styles.demoCard}>
         <Text style={styles.demoTitle}>{title}</Text>
@@ -101,6 +108,18 @@ const HomeScreen = ({ navigation }) => {
 
     // ----- Dropdown -----
     const [city, setCity] = useState(null);
+
+    const shareOnWhatsApp = async () => {
+        const text = encodeURIComponent(SHARE_MESSAGE);
+        try {
+            await Linking.openURL(`whatsapp://send?text=${text}`);
+        } catch (e) {
+            // WhatsApp install nahi hai to browser wala link khulega
+            Linking.openURL(`https://wa.me/?text=${text}`).catch(() =>
+                setAlert({ visible: true, type: 'error', title: 'Failed', message: 'Could not open WhatsApp.' })
+            );
+        }
+    };
 
     return (
         <>
@@ -231,6 +250,37 @@ const HomeScreen = ({ navigation }) => {
                     <Ionicons name="book-outline" size={20} color="#fff" />
                     <Text style={styles.learnText}>Learn how this app is built</Text>
                 </TouchableOpacity>
+
+                {/* Download (alert ke saath) */}
+                <TouchableOpacity
+                    style={styles.githubBtn}
+                    activeOpacity={0.85}
+                    onPress={() =>
+                        setAlert({
+                            visible: true,
+                            type: 'info',
+                            title: 'Download Source Code',
+                            message:
+                                'This will download a ZIP file to your phone. Please unzip it and open it on your computer. Do not try to open or run the project on your mobile.',
+                            confirmText: 'Download',
+                            cancelText: 'Cancel',
+                            onConfirm: () => Linking.openURL(ZIP_URL),
+                        })
+                    }
+                >
+                    <Ionicons name="logo-github" size={22} color="#fff" />
+                    <Text style={styles.learnText}>Download Source Code</Text>
+                </TouchableOpacity>
+
+                {/* WhatsApp share */}
+                <TouchableOpacity
+                    style={styles.whatsappBtn}
+                    activeOpacity={0.85}
+                    onPress={shareOnWhatsApp}
+                >
+                    <Ionicons name="logo-whatsapp" size={22} color="#fff" />
+                    <Text style={styles.learnText}>Share on WhatsApp</Text>
+                </TouchableOpacity>
             </ScrollView>
 
             {/* Alert aur Loader screen ke root par, ek baar render hote hain */}
@@ -259,6 +309,24 @@ const styles = StyleSheet.create({
         padding: 12,
         marginBottom: 10,
         elevation: 2,
+    },
+    githubBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#24292e',
+        paddingVertical: 14,
+        borderRadius: 24,
+        marginTop: 10,
+    },
+    whatsappBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#25D366',
+        paddingVertical: 14,
+        borderRadius: 24,
+        marginTop: 10,
     },
     iconWrap: {
         width: 42,
