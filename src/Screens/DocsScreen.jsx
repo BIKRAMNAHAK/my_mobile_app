@@ -363,6 +363,24 @@ const DocScreen = () => {
     return (
         <>
             <ScrollView style={styles.container} contentContainerStyle={{ padding: 16, paddingBottom: 40 }}>
+
+                {/* ===== Setup note ===== */}
+                <View style={styles.noteBox}>
+                    <View style={styles.noteHeader}>
+                        <Ionicons name="alert-circle" size={20} color="#B26A00" />
+                        <Text style={styles.noteTitle}>Before you run the project</Text>
+                    </View>
+                    <Text style={styles.noteText}>
+                        <Text style={styles.bold}>
+                            After downloading the ZIP file from GitHub, unzip it and run the
+                            "npm install" command in the project root folder.
+                        </Text>
+                    </Text>
+                    <View style={styles.noteCode}>
+                        <Text style={styles.code}>{`cd my_mobile_app\nnpm install`}</Text>
+                    </View>
+                </View>
+
                 <Section title="Libraries">
                     {LIBRARIES.map((lib) => (
                         <InfoCard key={lib.name} name={lib.name} use={lib.use} />
@@ -456,6 +474,19 @@ const DocScreen = () => {
 export default DocScreen;
 
 const styles = StyleSheet.create({
+    noteBox: {
+        backgroundColor: '#FFF8E1',
+        borderRadius: 10,
+        padding: 14,
+        marginBottom: 22,
+        borderLeftWidth: 4,
+        borderLeftColor: '#F9A825',
+    },
+    noteHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+    noteTitle: { fontSize: 15, fontWeight: '700', color: '#B26A00', marginLeft: 6 },
+    noteText: { fontSize: 13, color: '#444', lineHeight: 20, marginBottom: 10 },
+    bold: { fontWeight: '800', color: '#222' },
+    noteCode: { backgroundColor: '#0B1F4B', borderRadius: 8, padding: 12 },
     container: { flex: 1, backgroundColor: '#f5f7fa' },
     section: { marginBottom: 22 },
     sectionTitle: { fontSize: 18, fontWeight: '700', color: '#14367E', marginBottom: 10 },
